@@ -11,7 +11,7 @@
 - Matrix Construction
   - The class begins with matrix construction, referencing the BlackScholes class to calculate call and put prices for a given spot price and implied volatility
   - The spot and implied volatility are dynamic as they can be offset by spot_stp and iv_stp, which can be manually tuned within the live dashboard (for example, if Spot Step Slider is set to 0.05, or 5%, then each spot price directly surrounding the base spot will be offset by 5% and so forth as you move farther from the base spot rate)
-- Potting
+- Plotting
   - The class follows by instantiating two helper functions to assist the final plotting method
   - This code is not dynamic, instead, the design of the graph was done at my discretion. If desired, it can be updated to fit different preferences
 ## Dashboard:
