@@ -25,4 +25,4 @@
 - Outputs
   - The Greeks are output into an HTML formatted box (I want to emphasize that I do not know how to write HTML and relied on ChatGPT for assistance on this part)
   - The heatmap graph of the options PnL matrix is displayed on the right-hand side once all the parameters have been set
-  - The dashboard looks best when Streamlit is on “wide mode” and the user may need to tinker with the spot price and implied volatility sliders to show the heatmap
+  - The dashboard looks best when Streamlit is on “wide mode” and the browser is in a "dark mode" setting, and the user may need to tinker with the spot price and implied volatility sliders to show the heatmap
