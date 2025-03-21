@@ -7,8 +7,6 @@ import yfinance as yf
 from datetime import timedelta
 from datetime import datetime
 
-# streamlit run "/Users/henrycosentino/Desktop/Python/Projects/Option PnL Dashboard/Single.py"
-
 # Title
 st.set_page_config(page_title="Options Strategy App", layout="wide")
 st.title("Single Option Strategy")
