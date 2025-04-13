@@ -218,7 +218,7 @@ spot_stp = st.sidebar.slider('Spot Step Slider:',
                              key='spot_stp')
 
 # Implied Volatility Step Slider
-st.session_state.iv_stp = st.session_state.get("iv_stp", 0.01)
+st.session_state.iv_stp = st.session_state.get("iv_stp", 0.05)
 iv_stp = st.sidebar.slider('IV Step Slider:',
                            min_value=0.05,
                            max_value=0.25,
