@@ -1,5 +1,6 @@
 ## Streamlit App Link
 - https://optiondashboard-727xijizdnq8revxsgmxa7.streamlit.app/
+- Use darkmode
 ## Project Overview
 - The purpose of this project was to develop a dashboard that displays profit and loss (PnL) and option Greeks for a vanilla call or put stock option. The dashboard could be used by a trader in their workflow, or by an investor looking to hedge out risk in one of their positions.
 ## Black-Scholes Class:
