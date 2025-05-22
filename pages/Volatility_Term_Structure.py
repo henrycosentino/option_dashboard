@@ -123,7 +123,7 @@ if all(v is not None for v in [name, pct_band, frwd_period]):
         ax.plot(spot_day_ls, spot_call_iv_ls, marker='o', linestyle='-', label='Spot IV', color='orange')
         ax.plot(frwd_call_day_ls, frwd_call_iv_ls, marker='s', linestyle='--', label='Forward IV', color='pink')
 
-        ax.set_title(f"Call IV Term Strucutre for ATM Options on {name}", fontsize=18, fontweight='bold', color='white')
+        ax.set_title(f"Call IV Term Structure for ATM Options on {name}", fontsize=18, fontweight='bold', color='white')
         ax.set_ylabel("Implied Volatility", color='white')
         ax.set_xlabel("Days til Expiry", color='white')
 
@@ -161,7 +161,7 @@ if all(v is not None for v in [name, pct_band, frwd_period]):
         ax.plot(spot_day_ls, spot_put_iv_ls, marker='o', linestyle='-', label='Spot IV', color='orange')
         ax.plot(frwd_put_day_ls, frwd_put_iv_ls, marker='s', linestyle='--', label='Forward IV', color='pink')
 
-        ax.set_title(f"Put IV Term Strucutre for ATM Options on {name}", fontsize=18, fontweight='bold', color='white')
+        ax.set_title(f"Put IV Term Structure for ATM Options on {name}", fontsize=18, fontweight='bold', color='white')
         ax.set_ylabel("Implied Volatility", color='white')
         ax.set_xlabel("Days til Expiry", color='white')
 
