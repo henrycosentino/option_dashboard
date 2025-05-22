@@ -20,9 +20,9 @@
   - Volatility
     - Term Structure: analyzes the term structure of spot and forward volatility
       - Inputs
-          - The start day and end day, allowing the user to focus on a subset of the term structure
-          - The Forward Period input gives the user the ability to change the forward volatility curve they wish to analyze (ie, if Forward Period is set to 15 days and one of the days in the expiration list is 30, then this graph will display the 15D 30D Forward IV for that specific day
-          - The ATM band controls the type of volatility displayed, as at-the-money options typically represent the market's view of true volatility. Users can adjust the band to include options that are further out-of-the-money or closer to-the-money, depending on their preferred volatility term structure for analysis. If the Term Structure graphs do not show, consider changing this input.
+          - The "Start Day" and "End Day" configurations allow the user to focus on a subset of the term structure
+          - The "Forward Period" input gives the user the ability to change the forward volatility curve they wish to analyze (ie, if "Forward Period" is set to 15 days and one of the days in the expiration list is 30, then this graph will display the 15D 30D Forward IV for that specific day)
+          - The "ATM Band" controls the type of volatility displayed, as at-the-money options typically represent the market's view of true volatility. Users can adjust the band to include options that are further out-of-the-money or closer to-the-money, depending on their preferred volatility term structure for analysis. If the Term Structure graphs do not show, consider changing this input
       - Output
           - The output is two (one call and one put) matplotlib graphs of the spot and forward implied volatilities for a specific stock, leveraging vanilla stock option data from yfinance
     - Surface: analyzes the current volatility surface of all traded options for the underlying
