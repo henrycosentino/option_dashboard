@@ -3,7 +3,7 @@
 - Use dark mode
 - I manage the app frequently; however, the yfinance and FRED APIs may update their codebase, causing the app to fail...
 ## Project Overview
-- The purpose of this project was to develop a dashboard that displays profit and loss (PnL) and option Greeks for a vanilla call or put stock option. The dashboard could be used by a trader in their workflow, or by an investor looking to hedge out risk in one of their positions.
+- The purpose of this project was to develop a dashboard that displays profit and loss (PnL), option Greeks, and volatility for a vanilla call or put stock option. A trader could use the dashboard in their workflow, or an investor looking to hedge risk in one of their positions.
 ## Dashboard
 - The dashboard can be broken down into two parts: strategies and volatility
   - Strategies:
@@ -11,7 +11,7 @@
     - Straddle: a straddle option strategy, where either a long or short straddle is used with the same expiration and strike price; quantity can be changed for both options
     - Butterfly: various butterfly strategies can be analyzed, "Reverse Iron Butterfly" and "Iron Butterfly" have not been added yet
     - Inputs
-      - Inputs into the dashboard primarily concern the necessary parameters for the BlackScholes class (model)
+      - Inputs into these pages primarily concern the necessary parameters for the BlackScholes class (model)
       - Unique features include a calendar pop-up provided by Streamlit .date_input() to set the expiration date, the interpolation of the risk-free using the FRED API to stream current US Yield Curve data, and implied volatility and the spot price are capable of being offset by their respective sliders
     - Outputs
       - The Greeks are output into an HTML-formatted box (I want to emphasize that I do not know how to write HTML and relied on ChatGPT for assistance on this part)
@@ -19,7 +19,18 @@
       - The dashboard looks best when Streamlit is on “wide mode” and the browser is in a "dark mode" setting, and the user may need to tinker with the spot price and implied volatility sliders to show the heatmap
   - Volatility
     - Term Structure: analyzes the term structure of spot and forward volatility
+      - Inputs
+          - The start day and end day, allowing the user to focus on a subset of the term structure
+          - The Forward Period input gives the user the ability to change the forward volatility curve they wish to analyze (ie, if Forward Period is set to 15 days and one of the days in the expiration list is 30, then this graph will display the 15D 30D Forward IV for that specific day
+          - The ATM band controls the type of volatility displayed, as at-the-money options typically represent the market's view of true volatility. Users can adjust the band to include options that are further out-of-the-money or closer to-the-money, depending on their preferred volatility term structure for analysis. If the Term Structure graphs do not show, consider changing this input.
+      - Output
+          - The output is two (one call and one put) matplotlib graphs of the spot and forward implied volatilities for a specific stock, leveraging vanilla stock option data from yfinance
     - Surface: analyzes the current volatility surface of all traded options for the underlying
+      - Inputs
+          - The minimum and maximum expiration days, along with the minimum and maximum strike, allow the user to focus on a specific subset of the volatility surface
+          - The "Activate Meshgrid" switch should only be "on" when a small subset of the volatility surface has been selected
+      - Output
+          - The output is a plotly 3D graph of the current volatility surface, leveraging vanilla stock option data from yfinance
 ## Classes
 - Black-Scholes Class
   - The class was created to automate the process of various option metric calculations and is used in the dashboard.py and plotting.py files
