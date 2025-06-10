@@ -13,7 +13,7 @@
     - Butterfly: various butterfly strategies can be analyzed, "Reverse Iron Butterfly" and "Iron Butterfly" have not been added yet
     - Inputs
       - Inputs into these pages primarily concern the necessary parameters for the BlackScholes class (model)
-      - Unique features include a calendar pop-up provided by Streamlit .date_input() to set the expiration date, the interpolation of the risk-free using the FRED API to stream current US Yield Curve data, and implied volatility and the spot price are capable of being offset by their respective sliders
+      - Unique features include a calendar pop-up provided by Streamlit .date_input() to set the expiration date, the interpolation of the risk-free using the FRED API to stream current US Yield Curve data (I am aware of the API key, it is free from FRED), and implied volatility and the spot price are capable of being offset by their respective sliders
     - Outputs
       - The Greeks are output into an HTML-formatted box (I want to emphasize that I do not know how to write HTML and relied on ChatGPT for assistance on this part)
       - The heatmap graph of the options PnL matrix is displayed on the right-hand side once all the parameters have been set
