@@ -2,6 +2,7 @@
 - https://optiondashboard-727xijizdnq8revxsgmxa7.streamlit.app/
 - Use dark mode and wide mode
 - I manage the app frequently; however, the yfinance and FRED APIs may update their codebase, causing the app to fail...
+- There are still some bugs within the app, I am improving the error handling, program layout/design (ie, cleaning up the code), and adding more features when I have time...
 ## Project Overview
 - The purpose of this project was to develop a dashboard that displays profit and loss (PnL), option Greeks, and volatility for a vanilla call or put stock option. A trader could use the dashboard in their workflow, or an investor looking to hedge risk in one of their positions.
 ## Dashboard
