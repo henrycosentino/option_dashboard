@@ -10,14 +10,12 @@
   - Strategy Analysis
     - Single: a single option strategy, either a long or short call or put option
     - Straddle: a straddle option strategy, where either a long or short straddle is used with the same expiration and strike price; quantity can be changed for both options
-    - Butterfly: various butterfly strategies can be analyzed, "Reverse Iron Butterfly" and "Iron Butterfly" have not been added yet
-    - Inputs
+    - Butterfly: various butterfly strategies can be analyzed
       - Inputs into these pages primarily concern the necessary parameters for the BlackScholes class (model)
       - Unique features include a calendar pop-up provided by Streamlit .date_input() to set the expiration date, the interpolation of the risk-free using the FRED API to stream current US Yield Curve data (I am aware of the API key, it is free from FRED), and implied volatility and the spot price are capable of being offset by their respective sliders
     - Outputs
       - The Greeks are output into an HTML-formatted box (I want to emphasize that I do not know how to write HTML and relied on ChatGPT for assistance on this part)
       - The heatmap graph of the options PnL matrix is displayed on the right-hand side once all the parameters have been set
-      - The dashboard looks best when Streamlit is on “wide mode” and the browser is in a "dark mode" setting, and the user may need to tinker with the spot price and implied volatility sliders to show the heatmap
   - Volatility Analysis
     - Term Structure: analyzes the term structure of spot and forward volatility
       - Inputs
