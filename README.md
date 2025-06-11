@@ -7,7 +7,7 @@
 - The purpose of this project was to develop a dashboard that displays profit and loss (PnL), option Greeks, and volatility for a vanilla call or put stock option. A trader could use the dashboard in their workflow, or an investor looking to hedge risk in one of their positions.
 ## Dashboard
 - The dashboard can be broken down into two parts: strategies and volatility
-  - Strategies:
+  - Strategy Analysis
     - Single: a single option strategy, either a long or short call or put option
     - Straddle: a straddle option strategy, where either a long or short straddle is used with the same expiration and strike price; quantity can be changed for both options
     - Butterfly: various butterfly strategies can be analyzed, "Reverse Iron Butterfly" and "Iron Butterfly" have not been added yet
@@ -18,7 +18,7 @@
       - The Greeks are output into an HTML-formatted box (I want to emphasize that I do not know how to write HTML and relied on ChatGPT for assistance on this part)
       - The heatmap graph of the options PnL matrix is displayed on the right-hand side once all the parameters have been set
       - The dashboard looks best when Streamlit is on “wide mode” and the browser is in a "dark mode" setting, and the user may need to tinker with the spot price and implied volatility sliders to show the heatmap
-  - Volatility
+  - Volatility Analysis
     - Term Structure: analyzes the term structure of spot and forward volatility
       - Inputs
           - The "Start Day" and "End Day" configurations allow the user to focus on a subset of the term structure
@@ -32,18 +32,17 @@
           - The "Activate Meshgrid" switch should only be "on" when a small subset of the volatility surface has been selected
       - Output
           - The output is a plotly 3D graph of the current volatility surface, leveraging vanilla stock option data from yfinance
-## Classes
+## helpers
 - Black-Scholes Class
   - The class was created to automate the process of various option metric calculations and is used in the dashboard.py and plotting.py files
   - Calculates the value of a call and put option, along with first and second-order option Greeks
   - Relys on the methodology expressed in Option Volatility and Pricing: Advanced Trading Strategies and Techniques, 2nd Edition
-- Plotting Class
-  - The class was created for two purposes: to construct a matrix of option prices for different spot and implied volatility levels, and to plot the matrix cleanly
+- Matrix & Plotting Classes
+  - The classes were created for two purposes: to construct a matrix of option prices for different spot and implied volatility levels, and to plot the matrix cleanly
   - Matrix Construction
     - The class begins with matrix construction, referencing the BlackScholes class to calculate call and put prices for a given spot price and implied volatility
-    - The spot and implied volatility are dynamic as they can be offset by spot_stp and iv_stp, which can be manually tuned within the live dashboard (for example, if Spot Step Slider is set to 0.05, or 5%, then each spot price directly surrounding the base spot will be offset by 5% and so forth as you move farther from the base spot rate)
-  - Plotting
-    - The class is followed by instantiating two helper functions to assist the final plotting method
-    - This code is not dynamic, instead, the design of the graph was done at my discretion. If desired, it can be updated to fit different preferences
-- Volatility Class
-  - ...
+    - The spot and implied volatility are dynamic as they can be offset by spot_step and iv_step, which can be manually tuned within the live dashboard (for example, if Spot Step Slider is set to 0.05, or 5%, then each spot price directly surrounding the base spot will be offset by 5% and so forth as you move farther from the base spot rate)
+- Underlying & Volatility Classes
+  - The Underlying class is used to create a stock object used during the process of volatility analysis
+  - The Volatility class is used to calculate the volatility term structure (spot and forward) and the volatility surface. It currently only uses new/live data
+  - Currently, the Volatility class only uses live data. However, in the future, a method for determining the average spot volatility surfaces over a specific period will be implemented
