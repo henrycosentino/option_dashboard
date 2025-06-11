@@ -48,10 +48,10 @@ st.session_state.surface_min_expiry = min_expiry
 
 # Max Days til Expiry
 if "surface_max_expiry" not in st.session_state:
-    st.session_state.surface_max_expiry = 100_000
+    st.session_state.surface_max_expiry = 1_000
 max_expiry = st.sidebar.number_input("Max Expiry Day:", 
-                                     min_value=1, 
-                                     value=st.session_state.get("surface_max_expiry", 100_000))
+                                     min_value=2, 
+                                     value=st.session_state.get("surface_max_expiry", 1_000))
 st.session_state.surface_max_expiry = max_expiry
 
 # Day Range Validation
