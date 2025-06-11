@@ -16,90 +16,99 @@ st.sidebar.header("Option Inputs")
 if "straddle_ticker" not in st.session_state:
     st.session_state.straddle_ticker = "SPY"
 ticker = st.sidebar.text_input("Ticker:", value=st.session_state.straddle_ticker).upper()
-st.session_state.straddle_ticker = ticker
+if ticker:
+    st.session_state.straddle_ticker = ticker
 
 # Direction Selection
 if "straddle_direction" not in st.session_state:
     st.session_state.straddle_direction = "Long" 
-direction = st.sidebar.selectbox("Direction:", ["Long", "Short"])
+direction = st.sidebar.selectbox("Direction:", ["Long", "Short"], 
+                                index=0 if st.session_state.straddle_direction == "Long" else 1)
 st.session_state.straddle_direction = direction
 
 # Call Option Price Input
 if "straddle_call_px" not in st.session_state:
     st.session_state.straddle_call_px = 3.00
-straddle_call_px_input = st.sidebar.text_input("Call Price:")
-try:
-    call_px = float(straddle_call_px_input) if straddle_call_px_input else None
-except ValueError:
-    st.sidebar.error("Please enter a valid number for Call Price...")
-    call_px = None
-st.session_state.straddle_call_px = call_px
+straddle_call_px_input = st.sidebar.text_input("Call Price:", 
+                                              value=str(st.session_state.straddle_call_px) if st.session_state.straddle_call_px is not None else "")
+if straddle_call_px_input:
+    try:
+        st.session_state.straddle_call_px = float(straddle_call_px_input)
+    except ValueError:
+        st.sidebar.error("Please enter a valid number for Call Price...")
+call_px = st.session_state.straddle_call_px
 
 # Call Option Implied Volatility Input
 if "straddle_call_iv" not in st.session_state:
-    st.session_state.straddle_call_iv = 0.25
-straddle_call_iv_input = st.sidebar.text_input("IV for Call (%):")
-try:
-    call_iv = float(straddle_call_iv_input) / 100 if straddle_call_iv_input else None
-except ValueError:
-    st.sidebar.error("Please enter a valid number for Call IV...")
-    call_iv = None
-st.session_state.straddle_call_iv = call_iv
+    st.session_state.straddle_call_iv = 25.0
+straddle_call_iv_input = st.sidebar.text_input("IV for Call (%):", 
+                                              value=str(st.session_state.straddle_call_iv) if st.session_state.straddle_call_iv is not None else "")
+if straddle_call_iv_input:
+    try:
+        st.session_state.straddle_call_iv = float(straddle_call_iv_input)
+    except ValueError:
+        st.sidebar.error("Please enter a valid number for Call IV...")
+call_iv = st.session_state.straddle_call_iv / 100 if st.session_state.straddle_call_iv is not None else None
 
 # Call Option Quantity Input
 if "straddle_call_quantity" not in st.session_state:
     st.session_state.straddle_call_quantity = 1
-straddle_call_quantity = st.sidebar.text_input("Call Quantity:")
-try:
-    call_quantity = int(straddle_call_quantity) if straddle_call_quantity else None
-except:
-    st.sidebar.error("Please enter a valid integer for Call Quantity...")
-    call_quantity = None
-st.session_state.straddle_call_quantity = call_quantity
+straddle_call_quantity_input = st.sidebar.text_input("Call Quantity:", 
+                                                    value=str(st.session_state.straddle_call_quantity) if st.session_state.straddle_call_quantity is not None else "")
+if straddle_call_quantity_input:
+    try:
+        st.session_state.straddle_call_quantity = int(straddle_call_quantity_input)
+    except ValueError:
+        st.sidebar.error("Please enter a valid integer for Call Quantity...")
+call_quantity = st.session_state.straddle_call_quantity
 
 # Put Option Price Input
 if "straddle_put_px" not in st.session_state:
     st.session_state.straddle_put_px = 3.00
-straddle_put_px_input = st.sidebar.text_input("Put Option Price:")
-try:
-    put_px = float(straddle_put_px_input) if straddle_put_px_input else None
-except ValueError:
-    st.sidebar.error("Please enter a valid number for Put Option Price...")
-    put_px = None
-st.session_state.straddle_put_px = put_px
+straddle_put_px_input = st.sidebar.text_input("Put Option Price:", 
+                                             value=str(st.session_state.straddle_put_px) if st.session_state.straddle_put_px is not None else "")
+if straddle_put_px_input:
+    try:
+        st.session_state.straddle_put_px = float(straddle_put_px_input)
+    except ValueError:
+        st.sidebar.error("Please enter a valid number for Put Option Price...")
+put_px = st.session_state.straddle_put_px
 
 # Put Option Implied Volatility Input
 if "straddle_put_iv" not in st.session_state:
-    st.session_state.straddle_put_iv = 0.25
-straddle_put_iv_input = st.sidebar.text_input("IV for Put (%):")
-try:
-    put_iv = float(straddle_put_iv_input) / 100 if straddle_put_iv_input else None
-except ValueError:
-    st.sidebar.error("Please enter a valid number for Put IV...")
-    put_iv = None
-st.session_state.straddle_put_iv = put_iv
+    st.session_state.straddle_put_iv = 25.0
+straddle_put_iv_input = st.sidebar.text_input("IV for Put (%):", 
+                                             value=str(st.session_state.straddle_put_iv) if st.session_state.straddle_put_iv is not None else "")
+if straddle_put_iv_input:
+    try:
+        st.session_state.straddle_put_iv = float(straddle_put_iv_input)
+    except ValueError:
+        st.sidebar.error("Please enter a valid number for Put IV...")
+put_iv = st.session_state.straddle_put_iv / 100 if st.session_state.straddle_put_iv is not None else None
 
 # Put Option Quantity Input
 if "straddle_put_quantity" not in st.session_state:
     st.session_state.straddle_put_quantity = 1
-straddle_put_quantity = st.sidebar.text_input("Put Quantity:")
-try:
-    put_quantity = int(straddle_put_quantity) if straddle_put_quantity else None
-except:
-    st.sidebar.error("Please enter a valid number for Put Quantity...")
-    put_quantity = None
-st.session_state.straddle_put_quantity = put_quantity
+straddle_put_quantity_input = st.sidebar.text_input("Put Quantity:", 
+                                                   value=str(st.session_state.straddle_put_quantity) if st.session_state.straddle_put_quantity is not None else "")
+if straddle_put_quantity_input:
+    try:
+        st.session_state.straddle_put_quantity = int(straddle_put_quantity_input)
+    except ValueError:
+        st.sidebar.error("Please enter a valid number for Put Quantity...")
+put_quantity = st.session_state.straddle_put_quantity
 
 # Strike Input
 if "straddle_strike" not in st.session_state:
     st.session_state.straddle_strike = 650.00
-straddle_strike_input = st.sidebar.text_input("Strike:")
-try:
-    strike = float(straddle_strike_input) if straddle_strike_input else None
-except ValueError:
-    st.sidebar.error("Please enter a valid number for Strike...")
-    strike = None
-st.session_state.straddle_strike = strike
+straddle_strike_input = st.sidebar.text_input("Strike:", 
+                                             value=str(st.session_state.straddle_strike) if st.session_state.straddle_strike is not None else "")
+if straddle_strike_input:
+    try:
+        st.session_state.straddle_strike = float(straddle_strike_input)
+    except ValueError:
+        st.sidebar.error("Please enter a valid number for Strike...")
+strike = st.session_state.straddle_strike
 
 # Time Input
 if "straddle_time" not in st.session_state:
@@ -125,7 +134,7 @@ time = (expiration_date - datetime.today().date()).days / 365
 st.session_state.straddle_time = time
 st.sidebar.write(f"**Time to Expiry:** {time:.2f} years")
 
-# yfinance Stock Request for Spot & Diviend Yield
+# yfinance Stock Request for Spot & Dividend Yield
 spot = None
 dividend_yield = None
 if "straddle_spot" not in st.session_state: st.session_state.straddle_spot = 600.0
@@ -135,7 +144,7 @@ if ticker:
         stock = yf.Ticker(ticker)
         hist = stock.history(period="1d")
         if not hist.empty:
-            spot = hist.iloc[0,3]
+            spot = hist['Close'].iloc[-1]
         else:
             st.sidebar.error(f"Failed to retrieve price for {ticker} (check yfinance indexing)...")
             spot = st.session_state.straddle_spot
@@ -156,7 +165,7 @@ if spot:
     st.sidebar.write(f"**Spot Price:** ${spot:.2f}")
     st.session_state.straddle_spot = spot
 
-if dividend_yield:
+if dividend_yield is not None:
     st.sidebar.write(f"**Dividend Yield:** {100*dividend_yield:.2f}%")
     st.session_state.straddle_dividend_yield = dividend_yield
 
@@ -176,25 +185,31 @@ st.sidebar.write(f"**Risk-Free Rate:** {100*rate:.2f}%")
 st.sidebar.header('Dashboard Settings')
 
 # Spot Step Slider
+if "spot_step" not in st.session_state:
+    st.session_state.spot_step = 0.10
 spot_step_raw_value = st.sidebar.slider('Spot Step Slider:',
                              min_value=1,
                              max_value=25,
                              step=1,
+                             value=int(st.session_state.spot_step * 100),
                              format="%d%%")
 spot_step = spot_step_raw_value / 100
 st.session_state.spot_step = spot_step
 
 # Implied Volatility Step Slider
+if "iv_step" not in st.session_state:
+    st.session_state.iv_step = 0.10
 iv_step_raw_value = st.sidebar.slider('IV Step Slider:',
                              min_value=1,
                              max_value=25,
                              step=1,
+                             value=int(st.session_state.iv_step * 100),
                              format="%d%%")
 iv_step = iv_step_raw_value / 100
 st.session_state.iv_step = iv_step
 
 
-### OUTPUT ###
+# --- Streamlit App Output --- 
 if all(v is not None for v in [spot, call_px, put_px, call_iv, put_iv, strike, rate, 
                                time, dividend_yield, call_quantity, put_quantity, 
                                ticker, direction, spot_step, iv_step]):

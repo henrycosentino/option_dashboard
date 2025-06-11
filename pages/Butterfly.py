@@ -14,9 +14,9 @@ if "rate" not in st.session_state: st.session_state.rate = 0.04
 if "strategy_inputs" not in st.session_state:
     st.session_state.strategy_inputs = {
         "Long Call Butterfly": {
-            "low_strike": 550.0, "low_px": 3.00, "low_iv": 0.35,
-            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.40,
-            "high_strike": 580.0, "high_px": 5.00, "high_iv": 0.45,
+            "low_strike": 550.0, "low_px": 5.00, "low_iv": 0.15,
+            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.10,
+            "high_strike": 580.0, "high_px": 3.00, "high_iv": 0.11,
         },
         "Short Call Butterfly": {
             "low_strike": 550.0, "low_px": 3.00, "low_iv": 0.35,
@@ -68,7 +68,7 @@ if ticker:
         stock = yf.Ticker(ticker)
         hist = stock.history(period="1d")
         if not hist.empty:
-            spot = hist.iloc[0,3]
+            spot = hist['Close'].iloc[-1]
         else:
             st.sidebar.error(f"Failed to retrieve price for {ticker} (check yfinance indexing)...")
 
@@ -347,22 +347,22 @@ elif sub_strategy in ["Iron Butterfly", "Reverse Iron Butterfly"]:
     high_px = current_strategy_inputs["high_px"]
     high_iv = current_strategy_inputs["high_iv"]
 
-    if low_strike is None or low_strike <= 0: validation_errors.append("Low Put strike must be positive.")
-    if low_px is None or low_px <= 0: validation_errors.append("Low Put price must be positive.")
-    if low_iv is None or low_iv <= 0: validation_errors.append("Low Put IV must be positive.")
-    if atm_strike is None or atm_strike <= 0: validation_errors.append("ATM Put strike must be positive.")
-    if atm_px is None or atm_px <= 0: validation_errors.append("ATM Put price must be positive.")
-    if atm_iv is None or atm_iv <= 0: validation_errors.append("ATM Put IV must be positive.")
-    if atm_strike_2 is None or atm_strike_2 <= 0: validation_errors.append("ATM Call strike must be positive.")
-    if atm_px_2 is None or atm_px_2 <= 0: validation_errors.append("ATM Call price must be positive.")
-    if atm_iv_2 is None or atm_iv_2 <= 0: validation_errors.append("ATM Call IV must be positive.")
-    if high_strike is None or high_strike <= 0: validation_errors.append("High Call strike must be positive.")
-    if high_px is None or high_px <= 0: validation_errors.append("High Call price must be positive.")
-    if high_iv is None or high_iv <= 0: validation_errors.append("High Call IV must be positive.")
+    if low_strike is None or low_strike <= 0: validation_errors.append("Low Put strike must be positive...")
+    if low_px is None or low_px <= 0: validation_errors.append("Low Put price must be positive...")
+    if low_iv is None or low_iv <= 0: validation_errors.append("Low Put IV must be positive...")
+    if atm_strike is None or atm_strike <= 0: validation_errors.append("ATM Put strike must be positive...")
+    if atm_px is None or atm_px <= 0: validation_errors.append("ATM Put price must be positive...")
+    if atm_iv is None or atm_iv <= 0: validation_errors.append("ATM Put IV must be positive...")
+    if atm_strike_2 is None or atm_strike_2 <= 0: validation_errors.append("ATM Call strike must be positive...")
+    if atm_px_2 is None or atm_px_2 <= 0: validation_errors.append("ATM Call price must be positive...")
+    if atm_iv_2 is None or atm_iv_2 <= 0: validation_errors.append("ATM Call IV must be positive...")
+    if high_strike is None or high_strike <= 0: validation_errors.append("High Call strike must be positive...")
+    if high_px is None or high_px <= 0: validation_errors.append("High Call price must be positive...")
+    if high_iv is None or high_iv <= 0: validation_errors.append("High Call IV must be positive...")
 
     if all(v is not None for v in [low_strike, atm_strike, atm_strike_2, high_strike]):
         if not (low_strike < atm_strike and atm_strike == atm_strike_2 and atm_strike_2 < high_strike):
-            validation_errors.append(f"Strikes must be ordered: Low Put ({low_strike}) < ATM Put ({atm_strike}) == ATM Call ({atm_strike_2}) < High Call ({high_strike}).")
+            validation_errors.append(f"Strikes must be ordered: Low Put ({low_strike}) < ATM Put ({atm_strike}) == ATM Call ({atm_strike_2}) < High Call ({high_strike})...")
 
 
 if validation_errors:
@@ -386,7 +386,7 @@ else:
             high_bs = None
 
     except:
-        st.error(f"Error calculating Black-Scholes values...")
+        st.error(f"Error calculating Black Scholes values...")
         st.stop() 
 
 

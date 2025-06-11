@@ -546,3 +546,25 @@ def interpolate_rates(rate_dict: dict, time: float) -> float:
             return np.interp(time_days, [prev_key, key], [rate_one, rate_two])
 
         prev_key = key
+
+
+# --- Day Filter Helper Function --- 
+def day_filter(days_ls, iv_ls, start_day, end_day):
+    filtered_days = []
+    start_idx = None
+    end_idx = None
+
+    for i, day in enumerate(days_ls):
+        if day >= start_day:
+            if day <= end_day:
+                if start_idx is None:
+                    start_idx = i
+                end_idx = i 
+                filtered_days.append(day)
+    
+    if start_idx is not None and end_idx is not None:
+        filtered_iv = iv_ls[start_idx : end_idx + 1]
+    else:
+        filtered_iv = []
+    
+    return filtered_days, filtered_iv

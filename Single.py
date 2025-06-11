@@ -10,8 +10,6 @@ from helpers import BlackScholes, Plotting, Matrix, get_rates_value_dict, interp
 
 ### -------- TO DO --------- ###
     # Change interpolation method from linear for forward curve (do some research for this)
-    # Check for accuracy: butterfly and volatility term structure
-    # Session state: butterfly and volatility term structure
 
 
 # --- Streamlit App Input & Layout --- 
@@ -113,7 +111,7 @@ if ticker:
         stock = yf.Ticker(ticker)
         hist = stock.history(period="1d")
         if not hist.empty:
-            spot = hist.iloc[0,3]
+            spot = hist['Close'].iloc[-1]
         else:
             st.sidebar.error(f"Failed to retrieve price for {ticker} (check yfinance indexing)...")
             spot = st.session_state.single_spot
