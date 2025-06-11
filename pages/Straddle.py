@@ -255,10 +255,10 @@ if all(v is not None for v in [spot, call_px, put_px, call_iv, put_iv, strike, r
         # Graph Output
         with col2:
             call_matrix_instance = Matrix(spot=spot, px=call_px, iv=call_iv, k=strike, r=rate, t=time, 
-                                          b=dividend_yield, type='Call', spot_step=spot_step, 
+                                          b=dividend_yield, option_type='Call', spot_step=spot_step, 
                                           iv_step=iv_step)
             put_matrix_instance = Matrix(spot=spot, px=put_px, iv=put_iv, k=strike, r=rate, t=time, 
-                                         b=dividend_yield, type='Put', spot_step=spot_step, 
+                                         b=dividend_yield, option_type='Put', spot_step=spot_step, 
                                          iv_step=iv_step)
 
             call_matrix = call_matrix_instance.get_matrix(direction=direction) * call_quantity
