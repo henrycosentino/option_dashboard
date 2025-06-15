@@ -34,6 +34,7 @@
 - Black-Scholes & Binomial Classes
   - The classes were created to automate the process of various option metric calculations and are used in the dashboard.py and plotting.py files
   - They calculate the value of a call and put option, along with first and second-order option Greeks
+  - All displayed Greeks are calculated using Black-Scholes
   - Black-Scholes and Binomial can be dynamically set via switches inside the dashboard
       - When 'American' is selected, only the Binomial class is used. Thus, the "Model Ratio Slider" becomes irrelevant
       - The dashboard is set to automatically calculate a 'European' option price using 50% weights for both Black-Scholes and Binomial pricing models
