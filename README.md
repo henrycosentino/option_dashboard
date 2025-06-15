@@ -31,10 +31,15 @@
       - Output
           - The output is a plotly 3D graph of the current volatility surface, leveraging vanilla stock option data from yfinance
 ## helpers
-- Black-Scholes Class
-  - The class was created to automate the process of various option metric calculations and is used in the dashboard.py and plotting.py files
-  - Calculates the value of a call and put option, along with first and second-order option Greeks
-  - Relys on the methodology expressed in Option Volatility and Pricing: Advanced Trading Strategies and Techniques, 2nd Edition
+- Black-Scholes & Binomial Classes
+  - The classes were created to automate the process of various option metric calculations and are used in the dashboard.py and plotting.py files
+  - They calculate the value of a call and put option, along with first and second-order option Greeks
+  - Black-Scholes and Binomial can be dynamically set via switches inside the dashboard
+      - The dashboard is set to automatically calculate a 'European' option price using 50% weights for both Black-Scholes and Binomial pricing models
+      - When 'American' is selected, only the Binomial class is used
+      - The weighted average of both can also be set within the dashboard to plot theoretical option prices
+  - Black-Scholes relies on the methodology expressed in Option Volatility and Pricing: Advanced Trading Strategies and Techniques, 2nd Edition
+  - Binomial relies on the methodology expressed by Cox-Ross-Rubinstein to price call and put options, while some of the Greeks are calculated by perturbing the option price output of the Cox-Ross-Rubinstein model
 - Matrix & Plotting Classes
   - The classes were created for two purposes: to construct a matrix of option prices for different spot and implied volatility levels, and to plot the matrix cleanly
   - Matrix Construction
