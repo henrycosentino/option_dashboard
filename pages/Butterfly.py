@@ -15,35 +15,35 @@ if "strategy_inputs" not in st.session_state:
     st.session_state.strategy_inputs = {
         "Long Call Butterfly": {
             "low_strike": 550.0, "low_px": 5.00, "low_iv": 0.15,
-            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.10,
+            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.13,
             "high_strike": 580.0, "high_px": 3.00, "high_iv": 0.11,
         },
         "Short Call Butterfly": {
-            "low_strike": 550.0, "low_px": 3.00, "low_iv": 0.35,
-            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.40,
-            "high_strike": 580.0, "high_px": 5.00, "high_iv": 0.45,
+            "low_strike": 550.0, "low_px": 5.00, "low_iv": 0.15,
+            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.13,
+            "high_strike": 580.0, "high_px": 3.00, "high_iv": 0.11,
         },
         "Long Put Butterfly": {
-            "low_strike": 550.0, "low_px": 3.00, "low_iv": 0.35,
-            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.40,
-            "high_strike": 580.0, "high_px": 5.00, "high_iv": 0.45,
+            "low_strike": 550.0, "low_px": 5.00, "low_iv": 0.15,
+            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.13,
+            "high_strike": 580.0, "high_px": 3.00, "high_iv": 0.11,
         },
         "Short Put Butterfly": {
-            "low_strike": 550.0, "low_px": 3.00, "low_iv": 0.35,
-            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.40,
-            "high_strike": 580.0, "high_px": 5.00, "high_iv": 0.45,
+            "low_strike": 550.0, "low_px": 5.00, "low_iv": 0.15,
+            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.13,
+            "high_strike": 580.0, "high_px": 3.00, "high_iv": 0.11,
         },
         "Iron Butterfly": {
-            "low_strike": 550.0, "low_px": 3.00, "low_iv": 0.35,
-            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.40,
-            "atm_strike_2": 565.0, "atm_px_2": 4.00, "atm_iv_2": 0.40,
-            "high_strike": 580.0, "high_px": 5.00, "high_iv": 0.45
+            "low_strike": 550.0, "low_px": 3.00, "low_iv": 0.11,
+            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.13,
+            "atm_strike_2": 565.0, "atm_px_2": 4.00, "atm_iv_2": 0.13,
+            "high_strike": 580.0, "high_px": 3.00, "high_iv": 0.11,
         },
         "Reverse Iron Butterfly": {
-            "low_strike": 550.0, "low_px": 3.00, "low_iv": 0.35,
-            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.40,
-            "atm_strike_2": 565.0, "atm_px_2": 4.00, "atm_iv_2": 0.40,
-            "high_strike": 580.0, "high_px": 5.00, "high_iv": 0.45
+            "low_strike": 550.0, "low_px": 3.00, "low_iv": 0.11,
+            "atm_strike": 565.0, "atm_px": 4.00, "atm_iv": 0.13,
+            "atm_strike_2": 565.0, "atm_px_2": 4.00, "atm_iv_2": 0.13,
+            "high_strike": 580.0, "high_px": 3.00, "high_iv": 0.11,
         },
     }
 
@@ -103,63 +103,63 @@ if sub_strategy in ["Long Call Butterfly", "Short Call Butterfly",
     try:
         low_strike = float(low_strike_input) if low_strike_input else None
         if low_strike is not None: current_strategy_inputs["low_strike"] = low_strike
-    except ValueError: st.sidebar.error("Please enter a valid number for Low Strike.")
+    except ValueError: st.sidebar.error("Please enter a valid number for Low Strike...")
 
     # Low Price
     low_px_input = st.sidebar.text_input(f"Low Strike {option_type} Option Price ($):", value=str(current_strategy_inputs["low_px"]))
     try:
         low_px = float(low_px_input) if low_px_input else None
         if low_px is not None: current_strategy_inputs["low_px"] = low_px
-    except ValueError: st.sidebar.error("Please enter a valid number for Low Option Price.")
+    except ValueError: st.sidebar.error("Please enter a valid number for Low Option Price...")
 
     # Low IV
     low_iv_input = st.sidebar.text_input(f"IV for Low Strike {option_type} (%):", value=str(current_strategy_inputs["low_iv"] * 100))
     try:
         low_iv = float(low_iv_input) / 100 if low_iv_input else None
         if low_iv is not None: current_strategy_inputs["low_iv"] = low_iv
-    except ValueError: st.sidebar.error("Please enter a valid number for Low IV.")
+    except ValueError: st.sidebar.error("Please enter a valid number for Low IV...")
 
     # ATM Strike
     atm_strike_input = st.sidebar.text_input(f"Strike Price of ATM {option_type} Option:", value=str(current_strategy_inputs["atm_strike"]))
     try:
         atm_strike = float(atm_strike_input) if atm_strike_input else None
         if atm_strike is not None: current_strategy_inputs["atm_strike"] = atm_strike
-    except ValueError: st.sidebar.error("Please enter a valid number for ATM Strike.")
+    except ValueError: st.sidebar.error("Please enter a valid number for ATM Strike...")
 
     # ATM Price
     atm_px_input = st.sidebar.text_input(f"ATM Strike {option_type} Option Price ($):", value=str(current_strategy_inputs["atm_px"]))
     try:
         atm_px = float(atm_px_input) if atm_px_input else None
         if atm_px is not None: current_strategy_inputs["atm_px"] = atm_px
-    except ValueError: st.sidebar.error("Please enter a valid number for ATM Option Price.")
+    except ValueError: st.sidebar.error("Please enter a valid number for ATM Option Price...")
 
     # ATM IV
     atm_iv_input = st.sidebar.text_input(f"IV for ATM Strike {option_type} (%):", value=str(current_strategy_inputs["atm_iv"] * 100))
     try:
         atm_iv = float(atm_iv_input) / 100 if atm_iv_input else None
         if atm_iv is not None: current_strategy_inputs["atm_iv"] = atm_iv
-    except ValueError: st.sidebar.error("Please enter a valid number for ATM IV.")
+    except ValueError: st.sidebar.error("Please enter a valid number for ATM IV...")
 
     # High Strike
     high_strike_input = st.sidebar.text_input(f"Strike Price of High {option_type} Option:", value=str(current_strategy_inputs["high_strike"]))
     try:
         high_strike = float(high_strike_input) if high_strike_input else None
         if high_strike is not None: current_strategy_inputs["high_strike"] = high_strike
-    except ValueError: st.sidebar.error("Please enter a valid number for High Strike.")
+    except ValueError: st.sidebar.error("Please enter a valid number for High Strike...")
 
     # High Price
     high_px_input = st.sidebar.text_input(f"High Strike {option_type} Option Price ($):", value=str(current_strategy_inputs["high_px"]))
     try:
         high_px = float(high_px_input) if high_px_input else None
         if high_px is not None: current_strategy_inputs["high_px"] = high_px
-    except ValueError: st.sidebar.error("Please enter a valid number for High Option Price.")
+    except ValueError: st.sidebar.error("Please enter a valid number for High Option Price...")
 
     # High IV
     high_iv_input = st.sidebar.text_input(f"IV for High Strike {option_type} (%):", value=str(current_strategy_inputs["high_iv"] * 100))
     try:
         high_iv = float(high_iv_input) / 100 if high_iv_input else None
         if high_iv is not None: current_strategy_inputs["high_iv"] = high_iv
-    except ValueError: st.sidebar.error("Please enter a valid number for High IV.")
+    except ValueError: st.sidebar.error("Please enter a valid number for High IV...")
 
     atm_strike_2 = None
     atm_px_2 = None
@@ -171,76 +171,76 @@ elif sub_strategy in ["Iron Butterfly", "Reverse Iron Butterfly"]:
     try:
         low_strike = float(low_strike_input) if low_strike_input else None
         if low_strike is not None: current_strategy_inputs["low_strike"] = low_strike
-    except ValueError: st.sidebar.error("Please enter a valid number for Low Put Option Strike.")
+    except ValueError: st.sidebar.error("Please enter a valid number for Low Put Option Strike...")
 
     low_px_input = st.sidebar.text_input(f"Low Put Option Price ($):", value=str(current_strategy_inputs["low_px"]))
     try:
         low_px = float(low_px_input) if low_px_input else None
         if low_px is not None: current_strategy_inputs["low_px"] = low_px
-    except ValueError: st.sidebar.error("Please enter a valid number for Low Put Option Price.")
+    except ValueError: st.sidebar.error("Please enter a valid number for Low Put Option Price...")
 
     low_iv_input = st.sidebar.text_input(f"Lower Strike Put Option IV (%):", value=str(current_strategy_inputs["low_iv"] * 100))
     try:
         low_iv = float(low_iv_input) / 100 if low_iv_input else None
         if low_iv is not None: current_strategy_inputs["low_iv"] = low_iv
-    except ValueError: st.sidebar.error("Please enter a valid number for Low Put Option IV.")
+    except ValueError: st.sidebar.error("Please enter a valid number for Low Put Option IV...")
 
     # ATM Put Option
     atm_strike_input = st.sidebar.text_input(f"ATM Put Option Strike:", value=str(current_strategy_inputs["atm_strike"]))
     try:
         atm_strike = float(atm_strike_input) if atm_strike_input else None
         if atm_strike is not None: current_strategy_inputs["atm_strike"] = atm_strike
-    except ValueError: st.sidebar.error("Please enter a valid number for ATM Put Option Strike.")
+    except ValueError: st.sidebar.error("Please enter a valid number for ATM Put Option Strike...")
 
     atm_px_input = st.sidebar.text_input(f"ATM Put Option Price ($):", value=str(current_strategy_inputs["atm_px"]))
     try:
         atm_px = float(atm_px_input) if atm_px_input else None
         if atm_px is not None: current_strategy_inputs["atm_px"] = atm_px
-    except ValueError: st.sidebar.error("Please enter a valid number for ATM Put Option Price.")
+    except ValueError: st.sidebar.error("Please enter a valid number for ATM Put Option Price...")
 
     atm_iv_input = st.sidebar.text_input(f"ATM Put Option IV (%):", value=str(current_strategy_inputs["atm_iv"] * 100))
     try:
         atm_iv = float(atm_iv_input) / 100 if atm_iv_input else None
         if atm_iv is not None: current_strategy_inputs["atm_iv"] = atm_iv
-    except ValueError: st.sidebar.error("Please enter a valid number for ATM Put Option IV.")
+    except ValueError: st.sidebar.error("Please enter a valid number for ATM Put Option IV...")
 
     # ATM Call Option
     atm_strike_input_2 = st.sidebar.text_input(f"ATM Call Option Strike:", value=str(current_strategy_inputs["atm_strike_2"]))
     try:
         atm_strike_2 = float(atm_strike_input_2) if atm_strike_input_2 else None
         if atm_strike_2 is not None: current_strategy_inputs["atm_strike_2"] = atm_strike_2
-    except ValueError: st.sidebar.error("Please enter a valid number for ATM Call Option Strike.")
+    except ValueError: st.sidebar.error("Please enter a valid number for ATM Call Option Strike...")
 
     atm_px_input_2 = st.sidebar.text_input(f"ATM Call Option Price ($):", value=str(current_strategy_inputs["atm_px_2"]))
     try:
         atm_px_2 = float(atm_px_input_2) if atm_px_input_2 else None
         if atm_px_2 is not None: current_strategy_inputs["atm_px_2"] = atm_px_2
-    except ValueError: st.sidebar.error("Please enter a valid number for ATM Call Option Price.")
+    except ValueError: st.sidebar.error("Please enter a valid number for ATM Call Option Price...")
 
     atm_iv_2_input = st.sidebar.text_input(f"ATM Call Option IV (%):", value=str(current_strategy_inputs["atm_iv_2"] * 100))
     try:
         atm_iv_2 = float(atm_iv_2_input) / 100 if atm_iv_2_input else None
         if atm_iv_2 is not None: current_strategy_inputs["atm_iv_2"] = atm_iv_2
-    except ValueError: st.sidebar.error("Please enter a valid number for ATM Call Option IV.")
+    except ValueError: st.sidebar.error("Please enter a valid number for ATM Call Option IV...")
 
     # High Call Option
     high_strike_input = st.sidebar.text_input(f"High Call Option Strike:", value=str(current_strategy_inputs["high_strike"]))
     try:
         high_strike = float(high_strike_input) if high_strike_input else None
         if high_strike is not None: current_strategy_inputs["high_strike"] = high_strike
-    except ValueError: st.sidebar.error("Please enter a valid number for High Call Option Strike.")
+    except ValueError: st.sidebar.error("Please enter a valid number for High Call Option Strike...")
 
     high_px_input = st.sidebar.text_input(f"High Call Option Price ($):", value=str(current_strategy_inputs["high_px"]))
     try:
         high_px = float(high_px_input) if high_px_input else None
         if high_px is not None: current_strategy_inputs["high_px"] = high_px
-    except ValueError: st.sidebar.error("Please enter a valid number for High Call Option Price.")
+    except ValueError: st.sidebar.error("Please enter a valid number for High Call Option Price...")
 
     high_iv_input = st.sidebar.text_input(f"High Call Option IV (%):", value=str(current_strategy_inputs["high_iv"] * 100))
     try:
         high_iv = float(high_iv_input) / 100 if high_iv_input else None
         if high_iv is not None: current_strategy_inputs["high_iv"] = high_iv
-    except ValueError: st.sidebar.error("Please enter a valid number for High Call Option IV.")
+    except ValueError: st.sidebar.error("Please enter a valid number for High Call Option IV...")
 
 # Time Input
 if "time" not in st.session_state:

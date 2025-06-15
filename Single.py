@@ -4,6 +4,14 @@ from datetime import timedelta
 from datetime import datetime
 from helpers import BlackScholes, Plotting, Matrix, get_rates_value_dict, interpolate_rates
 
+
+# streamlit run "/Users/henrycosentino/Desktop/Python/Projects/Options Dashboard/Single.py"
+
+
+### -------- TO DO --------- ###
+    # Change interpolation method from linear for forward curve (do some research for this)
+
+
 # --- Streamlit App Input & Layout --- 
 # Title
 st.set_page_config(page_title="Options Strategy App", layout="wide")
