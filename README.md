@@ -48,5 +48,5 @@
     - The spot and implied volatility are dynamic as they can be offset by spot_step and iv_step, which can be manually tuned within the live dashboard (for example, if Spot Step Slider is set to 0.05, or 5%, then each spot price directly surrounding the base spot will be offset by 5% and so forth as you move farther from the base spot rate)
 - Underlying & Volatility Classes
   - The Underlying class is used to create a stock object used during the process of volatility analysis
-  - The Volatility class is used to calculate the volatility term structure (spot and forward) and the volatility surface. It currently only uses new/live data
+  - The Volatility class is used to calculate the volatility term structure (spot and forward) and the volatility surface
   - Currently, the Volatility class only uses live data. However, in the future, a method for determining the average spot volatility surfaces over a specific period will be implemented
