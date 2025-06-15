@@ -151,6 +151,24 @@ st.sidebar.write(f"**Risk-Free Rate:** {100*rate:.2f}%")
 # Sidebar header
 st.sidebar.header('Dashboard Settings')
 
+# Style
+if "single_style" not in st.session_state:
+    st.session_state.single_style = 'European'
+style = st.sidebar.selectbox("Style:", ["European", "American"], index=["European", "American"].index(st.session_state.single_style))
+st.session_state.single_style = style
+
+# Model Ratio Slider
+if "single_model_ratio" not in st.session_state:
+    st.session_state.single_model_ratio = 0.50
+model_ratio_raw_value = st.sidebar.slider('Model Ratio Slider:',
+                             min_value=1,
+                             max_value=99,
+                             value=int(st.session_state.single_model_ratio * 100),
+                             step=1,
+                             format="%d%%")
+model_ratio = model_ratio_raw_value / 100
+st.session_state.single_model_ratio = model_ratio
+
 # Spot Step Slider
 if "single_spot_step" not in st.session_state:
     st.session_state.single_spot_step = 0.05
@@ -224,8 +242,9 @@ if all(v is not None for v in [spot, iv, px, strike, rate, time, dividend_yield,
 
         # Graph Output
         with col2:
-                matrix_instance = Matrix(spot=spot, px=px, iv=iv, k=strike, r=rate, t=time, b=dividend_yield, 
-                                        option_type=option_type, spot_step=spot_step, iv_step=iv_step)
+                matrix_instance = Matrix(spot=spot, px=px, iv=iv, k=strike, r=rate, t=time, b=dividend_yield,
+                                         model_ratio=model_ratio, style=style, option_type=option_type, 
+                                         spot_step=spot_step, iv_step=iv_step)
                 matrix = matrix_instance.get_matrix(direction)
 
                 fig = Plotting(matrix, matrix_instance, 'Single', ticker).plot(direction, option_type)

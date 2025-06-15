@@ -277,6 +277,24 @@ st.sidebar.write(f"**Risk-Free Rate:** {100*rate:.2f}%")
 # Sidebar header
 st.sidebar.header('Dashboard Settings')
 
+# Style
+if "butterfly_style" not in st.session_state:
+    st.session_state.butterfly_style = 'European'
+style = st.sidebar.selectbox("Style:", ["European", "American"], index=["European", "American"].index(st.session_state.butterfly_style))
+st.session_state.butterfly_style = style
+
+# Model Ratio Slider
+if "butterfly_model_ratio" not in st.session_state:
+    st.session_state.butterfly_model_ratio = 0.50
+model_ratio_raw_value = st.sidebar.slider('Model Ratio Slider:',
+                             min_value=1,
+                             max_value=99,
+                             value=int(st.session_state.butterfly_model_ratio * 100),
+                             step=1,
+                             format="%d%%")
+model_ratio = model_ratio_raw_value / 100
+st.session_state.butterfly_model_ratio = model_ratio
+
 # Spot Step Slider
 spot_step_raw_value = st.sidebar.slider('Spot Step Slider:',
                              min_value=1,
@@ -461,60 +479,80 @@ else:
     try:
         if sub_strategy == "Long Call Butterfly":
             low = Matrix(spot, low_px, low_iv, low_strike, rate, time, 
-                         dividend_yield, 'Call', spot_step,iv_step)
+                         dividend_yield, 'Call', model_ratio, style, 
+                         spot_step, iv_step)
             atm = Matrix(spot, atm_px, atm_iv, atm_strike, rate, time, 
-                         dividend_yield, 'Call', spot_step, iv_step)
+                         dividend_yield, 'Call', model_ratio, style,
+                        spot_step, iv_step)
             high = Matrix(spot, high_px, high_iv, high_strike, rate, time,
-                          dividend_yield, 'Call', spot_step, iv_step)
+                          dividend_yield, 'Call',  model_ratio, style, 
+                          spot_step, iv_step)
             matrix_list = [low.get_matrix(direction='Long'), atm.get_matrix(direction='Short')*2, high.get_matrix(direction='Long')]
             instance_list = [low, atm, high]
         elif sub_strategy == "Short Call Butterfly":
             low = Matrix(spot, low_px, low_iv, low_strike, rate, time, 
-                         dividend_yield, 'Call', spot_step, iv_step)
+                         dividend_yield, 'Call', model_ratio, style,
+                         spot_step, iv_step)
             atm = Matrix(spot, atm_px, atm_iv, atm_strike, rate, time, 
-                         dividend_yield, 'Call', spot_step, iv_step)
+                         dividend_yield, 'Call', model_ratio, style,
+                         spot_step, iv_step)
             high = Matrix(spot, high_px, high_iv, high_strike, rate, time, 
-                          dividend_yield, 'Call', spot_step, iv_step)
+                          dividend_yield, 'Call', model_ratio, style,
+                          spot_step, iv_step)
             matrix_list = [low.get_matrix('Short'), atm.get_matrix('Long')*2, high.get_matrix('Short')]
             instance_list = [low, atm, high]
         elif sub_strategy == "Long Put Butterfly":
             low = Matrix(spot, low_px, low_iv, low_strike, rate, time, 
-                         dividend_yield, 'Put', spot_step, iv_step)
+                         dividend_yield, 'Put', model_ratio, style,
+                         spot_step, iv_step)
             atm = Matrix(spot, atm_px, atm_iv, atm_strike, rate, time, 
-                         dividend_yield, 'Put', spot_step, iv_step)
+                         dividend_yield, 'Put', model_ratio, style,
+                         spot_step, iv_step)
             high = Matrix(spot, high_px, high_iv, high_strike, rate, time, 
-                          dividend_yield, 'Put', spot_step, iv_step)
+                          dividend_yield, 'Put', model_ratio, style,
+                          spot_step, iv_step)
             matrix_list = [low.get_matrix('Long'), atm.get_matrix('Short')*2, high.get_matrix('Long')]
             instance_list = [low, atm, high]
         elif sub_strategy == "Short Put Butterfly":
             low = Matrix(spot, low_px, low_iv, low_strike, rate, time, 
-                         dividend_yield, 'Put', spot_step, iv_step)
+                         dividend_yield, 'Put', model_ratio, style,
+                         spot_step, iv_step)
             atm = Matrix(spot, atm_px, atm_iv, atm_strike, rate, time, 
-                         dividend_yield, 'Put', spot_step, iv_step)
+                         dividend_yield, 'Put', model_ratio, style,
+                         spot_step, iv_step)
             high = Matrix(spot, high_px, high_iv, high_strike, rate, time, 
-                          dividend_yield, 'Put', spot_step, iv_step)
+                          dividend_yield, 'Put', model_ratio, style,
+                          spot_step, iv_step)
             matrix_list = [low.get_matrix('Short'), atm.get_matrix('Long')*2, high.get_matrix('Short')]
             instance_list = [low, atm, high]
         elif sub_strategy == "Iron Butterfly":
             low = Matrix(spot, low_px, low_iv, low_strike, rate, time, 
-                         dividend_yield, 'Put', spot_step, iv_step)
+                         dividend_yield, 'Put', model_ratio, style,
+                         spot_step, iv_step)
             atm = Matrix(spot, atm_px, atm_iv, atm_strike, rate, time, 
-                         dividend_yield, 'Put', spot_step, iv_step)
+                         dividend_yield, 'Put', model_ratio, style,
+                         spot_step, iv_step)
             atm_2 = Matrix(spot, atm_px_2, atm_iv_2, atm_strike_2, rate, time, 
-                           dividend_yield, 'Call', spot_step, iv_step)
+                           dividend_yield, 'Call', model_ratio, style,
+                           spot_step, iv_step)
             high = Matrix(spot, high_px, high_iv, high_strike, rate, time, 
-                          dividend_yield, 'Call', spot_step, iv_step)
+                          dividend_yield, 'Call', model_ratio, style,
+                          spot_step, iv_step)
             matrix_list = [low.get_matrix('Long'), atm.get_matrix('Short'), atm_2.get_matrix('Short'), high.get_matrix('Long')]
             instance_list = [low, atm, atm_2, high]
         elif sub_strategy == "Reverse Iron Butterfly":
             low = Matrix(spot, low_px, low_iv, low_strike, rate, time, 
-                         dividend_yield, 'Put', spot_step, iv_step)
+                         dividend_yield, 'Put', model_ratio, style,
+                         spot_step, iv_step)
             atm = Matrix(spot, atm_px, atm_iv, atm_strike, rate, time, 
-                         dividend_yield, 'Put', spot_step, iv_step)
+                         dividend_yield, 'Put', model_ratio, style,
+                         spot_step, iv_step)
             atm_2 = Matrix(spot, atm_px_2, atm_iv_2, atm_strike_2, rate, time, 
-                           dividend_yield, 'Call', spot_step, iv_step)
+                           dividend_yield, 'Call', model_ratio, style,
+                           spot_step, iv_step)
             high = Matrix(spot, high_px, high_iv, high_strike, rate, time, 
-                          dividend_yield, 'Call', spot_step, iv_step)
+                          dividend_yield, 'Call', model_ratio, style,
+                          spot_step, iv_step)
             matrix_list = [low.get_matrix('Short'), atm.get_matrix('Long'), atm_2.get_matrix('Long'), high.get_matrix('Short')]
             instance_list = [low, atm, atm_2, high]
     except:

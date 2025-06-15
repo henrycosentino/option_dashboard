@@ -12,12 +12,15 @@ import matplotlib.colors as mcolors
 # --- BlackScholes Option Pricing Class ---
 class BlackScholes:
     def __init__(self, k, s, r, t, iv, b):
-        self.k = float(k) # Strike
-        self.s = float(s) # Spot
-        self.r = float(r) # Risk free rate (annual; input in decimal form ie 5.0% --> 0.05)
-        self.t = float(t) # Time (fraction of years; input in decimal form ie 3 months --> 0.25)
-        self.iv = float(iv) # Implied volatility (input in decimal form ie 20.0% --> 0.20)
-        self.b = float(b) # Dividend rate (annual; input in decimal form ie 2.0% --> 0.02)
+        assert all(x >= 0 for x in [k, s, r, t, iv, b]), "Input parameters for BlackScholes must be greater than or equal to zero..."
+        k, s, r, t, iv, b = [float(x) for x in [k, s, r, t, iv, b]]
+
+        self.k = k # Strike
+        self.s = s # Spot
+        self.r = r # Risk free rate (annual; input in decimal form ie 5.0% --> 0.05)
+        self.t = t # Time (fraction of years; input in decimal form ie 3 months --> 0.25)
+        self.iv = iv # Implied volatility (input in decimal form ie 20.0% --> 0.20)
+        self.b = b # Dividend rate (annual; input in decimal form ie 2.0% --> 0.02)
 
     def _d1(self) -> float:
         return (np.log(self.s/self.k) + (self.b + self.iv**2 * 0.5) * self.t) / (np.sqrt(self.t) * self.iv)
@@ -31,14 +34,15 @@ class BlackScholes:
     def put_px(self) -> float:
         return self.k * np.exp(-self.r * self.t) * norm.cdf(-self._d2()) - self.s * np.exp((self.b-self.r) * self.t) * norm.cdf(-self._d1())
 
-    def delta(self, option_type: str) -> float:
-        option_type = option_type.upper()
-        if option_type == 'CALL':
+    def delta(self, option_type: str = 'Call') -> float:
+        option_type = option_type.capitalize()
+        if option_type not in ['Call', 'Put']:
+            raise ValueError("Option type must be 'Call' or 'Put'...")
+        
+        if option_type == 'Call':
             return np.exp((self.b-self.r) * self.t) * norm.cdf(self._d1())
-        elif option_type == 'PUT':
-            return -np.exp((self.b-self.r) * self.t) * norm.cdf(-self._d1())
         else:
-            raise ValueError("option_type must be 'CALL' or 'PUT'")
+            return -np.exp((self.b-self.r) * self.t) * norm.cdf(-self._d1())
         
     def gamma(self) -> float:
         return (np.exp((self.b-self.r) * self.t) * norm.pdf(self._d1())) / (self.s * self.iv * np.sqrt(self.t))
@@ -46,55 +50,233 @@ class BlackScholes:
     def vega(self) -> float:
         return (self.s * np.exp((self.b-self.r) * self.t) * norm.pdf(self._d1()) * np.sqrt(self.t)) / 100 # Scales to a one percentage point change (ie 1%)
 
-    def rho(self, option_type: str) -> float:
-        option_type = option_type.upper()
-        if option_type == 'CALL':
-            if self.b == 0:
-                return -self.t * self.call_px() / 100 # Scales to a one percentage point change (ie 1%)
-            else:
-                return self.t * self.k * np.exp(-self.r * self.t) * norm.cdf(self._d2()) / 100 # Scales to a one percentage point change (ie 1%)
-        if option_type == 'PUT':
-            if self.b == 0:
-                return -self.t * self.put_px() / 100 # Scales to a one percentage point change (ie 1%)
-            else:
-                return -self.t * self.k * np.exp(-self.r * self.t) * norm.cdf(-self._d2()) / 100 # Scales to a one percentage point change (ie 1%)
+    def rho(self, option_type: str = 'Call') -> float:
+        option_type = option_type.capitalize()
+        if option_type not in ['Call', 'Put']:
+            raise ValueError("Option type must be 'Call' or 'Put'...")
+        
+        if option_type == 'Call':
+            return self.t * self.k * np.exp(-self.r * self.t) * norm.cdf(self._d2()) / 100  # Scales to a one percentage point change (ie 1%)
+        else:
+            return -self.t * self.k * np.exp(-self.r * self.t) * norm.cdf(-self._d2()) / 100 # Scales to a one percentage point change (ie 1%)
     
-    def theta(self, option_type: str) -> float:
-        option_type = option_type.upper()
+    def theta(self, option_type: str = 'Call') -> float:
+        option_type = option_type.capitalize()
+        if option_type not in ['Call', 'Put']:
+            raise ValueError("Option type must be 'Call' or 'Put'...")
+        
         term1 = -(self.s * np.exp((self.b-self.r) * self.t) * norm.pdf(self._d1()) * self.iv) / (2 * np.sqrt(self.t))
-        if option_type == 'CALL':
+        if option_type == 'Call':
             term2 = (self.b - self.r) * self.s * np.exp((self.b-self.r) * self.t) * norm.cdf(self._d1()) - (self.r * self.k * np.exp(-self.r * self.t) * norm.cdf(self._d2()))
-            return (term1 + term2) / 365 # Scaled to represent calendar day time-value 
-        elif option_type == 'PUT':
+            return (term1 + term2) / 365 # Scaled to represent a one day change 
+        else:
             term2 = (self.b - self.r) * self.s * np.exp((self.b-self.r) * self.t) * norm.cdf(-self._d1()) + (self.r * self.k * np.exp(-self.r * self.t) * norm.cdf(-self._d2()))
-            return (term1 + term2) / 365 # Scaled to represent calendar day time-value 
+            return (term1 + term2) / 365 # Scaled to represent a one day change 
         
     def vanna(self) -> float:
         return -np.exp((self.b-self.r) * self.t) * norm.pdf(self._d1()) * (self._d2() / self.iv)
 
-    def charm(self, option_type: str) -> float:
-        option_type = option_type.upper()
+    def charm(self, option_type: str = 'Call') -> float:
+        option_type = option_type.capitalize()
+        if option_type not in ['Call', 'Put']:
+            raise ValueError("Option type must be 'Call' or 'Put'...")
+        
         term1 = norm.pdf(self._d1()) * ((self.b / (self.iv * np.sqrt(self.t))) - (self._d2() / (2 * self.t)))
         term2 = (self.b - self.r) * norm.cdf(self._d1())
-        if option_type == 'CALL':
+        if option_type == 'Call':
             return -np.exp((self.b - self.r) * self.t) * (term1 + term2) / 252 # Scaled to represent trading calendar
-        elif option_type == 'PUT':
+        else:
             return -np.exp((self.b - self.r) * self.t) * (term1 - (self.b - self.r) * norm.cdf(-self._d1())) / 252 # Scaled to represent trading calendar
         
     def volga(self) -> float:
         return self.vega() * (self._d1() * self._d2() / self.iv) / 100
 
+
+# --- Binomial Option Pricing Class ---
+class Binomial:
+    def __init__(self, k, s, r, t, iv, b, n: int=300, style='American'):
+        assert all(x >= 0 for x in [k, s, r, t, iv, b, n]), "Input parameters for Binomial must be greater than or equal to zero..."
+        assert style in ['American', 'European'], "Style must be 'American' or 'European'..."
+        k, s, r, t, iv, b = [float(x) for x in [k, s, r, t, iv, b]]
+        n = int(n)
+        
+        self.k = k # Strike
+        self.s = s # Spot
+        self.r = r # Risk free rate (annual; input in decimal form ie 5.0% --> 0.05)
+        self.t = t # Time (fraction of years; input in decimal form ie 3 months --> 0.25)
+        self.iv = iv # Implied volatility (input in decimal form ie 20.0% --> 0.20)
+        self.b = b # Dividend rate (annual; input in decimal form ie 2.0% --> 0.02)
+        self.n = n # Number of steps
+        self.style = style
+        self.dt = t / n
+        self.u = np.exp(self.iv * np.sqrt(self.dt))
+        self.d = 1 / self.u
+        self.adj_r = self.r - self.b
+        self.p = (np.exp(self.adj_r * self.dt) - self.d) / (self.u - self.d)
+        self._C_delta = [0, 0] # Call or put step values for delta calculation
+        self._C_gamma = [0, 0, 0] # Call or put step values for gamma calculation
+
+    def call_px(self) -> float:
+        # Stock prices at maturity
+        S = np.zeros(self.n + 1)
+        for j in range(0, self.n + 1):
+            S[j] = self.s * self.u**j * self.d**(self.n - j)
+
+        # Option payoff at maturity
+        C = np.zeros(self.n + 1)
+        for j in range(0, self.n + 1):
+            C[j] = max(S[j] - self.k, 0)
+
+        # Backward recursion
+        for i in range(self.n - 1, -1, -1):
+            for j in range(0, i + 1):
+
+                ev = np.exp(-self.r*self.dt) * (self.p * C[j + 1] + (1 - self.p) * C[j])
+
+                if self.style == 'American':
+                    current_S_node = self.s * (self.u**j) * (self.d**(i - j))
+                    C[j] = max(ev, current_S_node - self.k)
+                else:
+                    C[j] = ev
+
+                # For delta and gamma calculations
+                if i == 1:
+                    self._C_delta[0] = C[0]
+                    self._C_delta[1] = C[1]
+                elif i == 2:
+                    self._C_gamma[0] = C[0] 
+                    self._C_gamma[1] = C[1] 
+                    self._C_gamma[2] = C[2]
+
+        return C[0]
+
+    def put_px(self) -> float:
+        # Stock prices at maturity
+        S = np.zeros(self.n + 1)
+        for j in range(0, self.n + 1):
+            S[j] = self.s * self.u**j * self.d**(self.n - j)
+
+        # Option payoff at maturity
+        C = np.zeros(self.n + 1)
+        for j in range(0, self.n + 1):
+            C[j] = max(self.k - S[j], 0)
+
+        # Backward recursion
+        for i in range(self.n - 1, -1, -1):
+            for j in range(0, i + 1):
+
+                ev = np.exp(-self.r*self.dt) * (self.p * C[j + 1] + (1 - self.p) * C[j])
+
+                if self.style == 'American':
+                    current_S_node = self.s * (self.u**j) * (self.d**(i - j))
+                    C[j] = max(ev, self.k - current_S_node)
+                else:
+                    C[j] = ev
+
+                # For delta and gamma calculations
+                if i == 1:
+                    self._C_delta[0] = C[0]
+                    self._C_delta[1] = C[1]
+                elif i == 2:
+                    self._C_gamma[0] = C[0] 
+                    self._C_gamma[1] = C[1] 
+                    self._C_gamma[2] = C[2]
+                    
+        return C[0]
+    
+    def delta(self, option_type: str = 'Call') -> float:
+        option_type = option_type.capitalize()
+        if option_type not in ['Call', 'Put']:
+            raise ValueError("Option type must be 'Call' or 'Put'...")
+        
+        if option_type == 'Call':
+            self.call_px()
+            return (self._C_delta[1] - self._C_delta[0]) / (self.s * (self.u - self.d))
+        else:
+            self.put_px()
+            return (self._C_delta[1] - self._C_delta[0]) / (self.s * (self.u - self.d))
+
+    def gamma(self, option_type: str = 'Call') -> float:
+        option_type = option_type.capitalize()
+        if option_type not in ['Call', 'Put']:
+            raise ValueError("Option type must be 'Call' or 'Put'...")
+        
+        if option_type == 'Call':
+            self.call_px()
+            delta_u = (self._C_gamma[2] - self._C_gamma[1]) / (self.s * self.u - self.s)
+            delta_d = (self._C_gamma[1] - self._C_gamma[0]) / (self.s - self.s * self.d)
+            return (delta_u - delta_d) / (self.s * (self.u - self.d))
+        else:
+            self.put_px()
+            delta_u = (self._C_gamma[2] - self._C_gamma[1]) / (self.s * self.u - self.s)
+            delta_d = (self._C_gamma[1] - self._C_gamma[0]) / (self.s - self.s * self.d)
+            return (delta_u - delta_d) / (self.s * (self.u - self.d))
+        
+    def vega(self, option_type: str = 'Call', iv_delta: float=0.01) -> float:
+        option_type = option_type.capitalize()
+        if option_type not in ['Call', 'Put']:
+            raise ValueError("Option type must be 'Call' or 'Put'...")
+        
+        if iv_delta < 0:
+            raise ValueError("IV delta must be greater than zero...")
+        
+        bn_up = Binomial(self.k, self.s, self.r, self.t, self.iv+iv_delta, self.b, self.n, self.style)
+        bn_down = Binomial(self.k, self.s, self.r, self.t, self.iv-iv_delta, self.b, self.n, self.style)
+        
+        if option_type == 'Call':
+            return (bn_up.call_px() - bn_down.call_px()) / (iv_delta * 200) # Scales to a one percentage point change (ie 1%)
+        else:
+            return (bn_up.put_px() - bn_down.put_px()) / (iv_delta * 200) # Scales to a one percentage point change (ie 1%)
+    
+    def rho(self, option_type: str = 'Call', r_delta: float=0.01) -> float:
+        option_type = option_type.capitalize()
+        if option_type not in ['Call', 'Put']:
+            raise ValueError("Option type must be 'Call' or 'Put'...")
+
+        if r_delta <= 0:
+            raise ValueError("Rate delta must be greater than zero...")
+        
+        bn_up = Binomial(self.k, self.s, self.r+r_delta, self.t, self.iv, self.b, self.n, self.style)
+        bn_down = Binomial(self.k, self.s, self.r-r_delta, self.t, self.iv, self.b, self.n, self.style)
+        
+        if option_type == 'Call':
+            return (bn_up.call_px() - bn_down.call_px()) / (r_delta * 200) # Scales to a one percentage point change (ie 1%)
+        else:
+            return (bn_up.put_px() - bn_down.put_px()) / (r_delta * 200) # Scales to a one percentage point change (ie 1%)
+    
+    def theta(self, option_type: str = 'Call', t_delta: float = 1/365) -> float:
+        option_type = option_type.capitalize()
+        if option_type not in ['Call', 'Put']:
+            raise ValueError("Option type must be 'Call' or 'Put'")
+        
+        if t_delta <= 0:
+            raise ValueError("Time delta must be greater than zero...")
+        
+        if self.t <= t_delta:
+            raise ValueError("Time to expiration must be greater than time delta...")
+        
+        bn_future = Binomial(self.k, self.s, self.r, self.t - t_delta, self.iv, self.b, self.n, self.style)
+        
+        if option_type == 'Call':
+            return (bn_future.call_px() - self.call_px()) / t_delta / 365 # Scaled to represent a one day change 
+        else:
+            return (bn_future.put_px() - self.put_px()) / t_delta / 365 # Scaled to represent a one day change 
+
+
 # --- Matrix PnL Generation Class ---
 class Matrix:
-    def __init__(self, spot, px, iv, k, r, t, b, option_type: str,
-                 spot_step: float=0.05, iv_step:float=0.05):
+    def __init__(self, spot, px, iv, k, r, t, b, option_type: str, model_ratio: float = 0.5, 
+                 style: str='European', spot_step: float=0.05, iv_step: float=0.05):
         
-        assert all(x >= 0 for x in [spot, px, k, r, t, b, spot_step, iv_step])
+        assert all(x >= 0 for x in [spot, px, k, r, t, b, model_ratio, spot_step, iv_step]), "Input parameters for Matrix must be greater than or equal to zero..."
 
         option_type = option_type.capitalize()
-        valid_types = ['Call', 'Put']
-        if option_type not in valid_types:
-            raise ValueError(f"Option type must be one of {valid_types}...")
+        if option_type not in ['Call', 'Put']:
+            raise ValueError("Option type must be 'Call' or 'Put'...")
+        
+        style = style.capitalize()
+        if style not in ['American', 'European']:
+            raise ValueError("Contract type must be 'American' or 'European'...")
 
         self.spot = spot # Spot price of the asset
         self.px = px # Spot price of the option
@@ -104,6 +286,8 @@ class Matrix:
         self.t = t # Time (years in decimal, ie 6 months --> 0.50)
         self.b = b # Dividend yield (decimal, ie 3.5% --> 0.035)
         self.option_type = option_type # Type of option (call or put)
+        self.model_ratio = model_ratio # Ratio of BlackScholes to Binomial option pricing (ie 0.5 means 30% BlackScholes and 70% Binomial)
+        self.style = style
         self.spot_step = spot_step # Used to adjust the dashboard output
         self.iv_step = iv_step # Used to adjust the dashboard output
         self.direction = None
@@ -141,18 +325,24 @@ class Matrix:
         matrix = []
         for iv in iv_list:
             for spot in spot_list:
-                bs = BlackScholes(self.k, float(spot), self.r, self.t, float(iv), self.b)
+                bs = BlackScholes(self.k, spot, self.r, self.t, iv, self.b)
+                bn = Binomial(self.k, spot, self.r, self.t, iv, self.b, style=self.style)
+
+                if self.style == 'American':
+                    model_ratio = 0
+                else:
+                    model_ratio = self.model_ratio
 
                 if direction == "Long":
                     if self.option_type == 'Call':
-                        pnl = bs.call_px() - self.px
+                        pnl = model_ratio*(bs.call_px() - self.px) + (1-model_ratio)*(bn.call_px() - self.px)
                     else:
-                        pnl = bs.put_px() - self.px
+                        pnl = model_ratio*(bs.put_px() - self.px) + (1-model_ratio)*(bn.put_px() - self.px)
                 else:
                     if self.option_type == 'Call':
-                        pnl = self.px - bs.call_px()
+                        pnl = model_ratio*(self.px - bs.call_px()) + (1-model_ratio)*(self.px - bn.call_px())
                     else:
-                        pnl = self.px - bs.put_px()
+                        pnl = model_ratio*(self.px - bs.put_px()) + (1-model_ratio)*(self.px - bn.put_px())
                 
                 matrix.append(round(pnl, 2))
         

@@ -184,6 +184,24 @@ st.sidebar.write(f"**Risk-Free Rate:** {100*rate:.2f}%")
 # Sidebar header
 st.sidebar.header('Dashboard Settings')
 
+# Style
+if "straddle_style" not in st.session_state:
+    st.session_state.straddle_style = 'European'
+style = st.sidebar.selectbox("Style:", ["European", "American"], index=["European", "American"].index(st.session_state.straddle_style))
+st.session_state.straddle_style = style
+
+# Model Ratio Slider
+if "straddle_model_ratio" not in st.session_state:
+    st.session_state.straddle_model_ratio = 0.50
+model_ratio_raw_value = st.sidebar.slider('Model Ratio Slider:',
+                             min_value=1,
+                             max_value=99,
+                             value=int(st.session_state.straddle_model_ratio * 100),
+                             step=1,
+                             format="%d%%")
+model_ratio = model_ratio_raw_value / 100
+st.session_state.straddle_model_ratio = model_ratio
+
 # Spot Step Slider
 if "spot_step" not in st.session_state:
     st.session_state.spot_step = 0.10
@@ -270,11 +288,11 @@ if all(v is not None for v in [spot, call_px, put_px, call_iv, put_iv, strike, r
         # Graph Output
         with col2:
             call_matrix_instance = Matrix(spot=spot, px=call_px, iv=call_iv, k=strike, r=rate, t=time, 
-                                          b=dividend_yield, option_type='Call', spot_step=spot_step, 
-                                          iv_step=iv_step)
+                                          b=dividend_yield, option_type='Call', model_ratio=model_ratio, 
+                                          style=style, spot_step=spot_step, iv_step=iv_step)
             put_matrix_instance = Matrix(spot=spot, px=put_px, iv=put_iv, k=strike, r=rate, t=time, 
-                                         b=dividend_yield, option_type='Put', spot_step=spot_step, 
-                                         iv_step=iv_step)
+                                         b=dividend_yield, option_type='Put', model_ratio=model_ratio, 
+                                          style=style, spot_step=spot_step, iv_step=iv_step)
 
             call_matrix = call_matrix_instance.get_matrix(direction=direction) * call_quantity
             put_matrix = put_matrix_instance.get_matrix(direction=direction) * put_quantity
