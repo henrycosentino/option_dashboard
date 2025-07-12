@@ -4,7 +4,7 @@
 - I manage the app frequently; however, the yfinance and FRED APIs may update their codebase, causing the app to fail...
 ## Project Overview
 - The purpose of this project was to develop a dashboard that displays profit and loss (PnL), option Greeks, and volatility for a vanilla call or put stock option. A trader could use the dashboard in their workflow, or an investor looking to hedge risk in one of their positions.
-## Dashboard (pages folder)
+## Dashboard
 - The dashboard can be broken down into two parts: strategies and volatility
   - Strategy Analysis
     - [Single](https://github.com/henrycosentino/option_dashboard/blob/main/Single.py): a single option strategy, either a long or short call or put option
