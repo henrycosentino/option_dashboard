@@ -1,0 +1,12 @@
+[theme]
+base="dark"
+
+[browser]
+gatherUsageStats = false
+
+[server]
+enableCORS=false
+enableXsrfProtection=false
+
+[global]
+layout="wide"
